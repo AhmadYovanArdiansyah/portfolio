@@ -1,118 +1,150 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import {  useEffect, useRef, useState} from "react";
 
 export default function Home() {
-  return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+	var currentPage = 0;
+	var scrolling = false;
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+	const sections = useRef<HTMLElement[]>([]) ;
+	sections.current = [] ;
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+	const ref = (e: HTMLElement) => {
+		sections.current.push(e);
+	}
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
+	const scrollTo = (n: number) => {
+		scrolling = true;
+		sections.current[currentPage]?.classList.remove('active');
+		sections.current[n]?.classList.add('active');
+		for (var i = 2; i < n + 1; i++) {
+			console.log(i);
+			if (n > 1) sections.current[i - 1]?.classList.remove('anim');
+			sections.current[i - 1]?.classList.add('hideup');
+			sections.current[i - 1]?.classList.remove('hidedown');
+		}
+		setTimeout(() => {
+			sections.current[n - 1]?.classList.add('anim');
+			sections.current[n - 2]?.classList.add('anim');
+			scrolling = false
+		}, 900);
+		currentPage = n;
+	}
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+	const scroll = (e: string) => {
+		scrolling = true;
+		sections.current[currentPage]?.classList.remove('active');
+		if (e == 'up') {
+			sections.current[currentPage - 1]?.classList.add('active');
+			sections.current[currentPage]?.classList.add('hidedown');
+			sections.current[currentPage]?.classList.remove('hideup');	
+		} else if (e == 'down') {
+			sections.current[currentPage + 1]?.classList.add('active');
+			sections.current[currentPage]?.classList.add('hideup');
+			sections.current[currentPage]?.classList.remove('hidedown');
+		}
+		setTimeout(() => scrolling = false, 900);
+	}
+	const scrollUp = () => {
+		if (currentPage == 0) {
+			document.body.classList.remove('norefresh');
+			return;
+		}
+		document.body.classList.add('norefresh');
+		scroll('up');
+		currentPage--;
+	}
+
+	const scrollDown = () => {
+		if (currentPage === (sections.current.length - 1)) return;
+		scroll('down');
+		currentPage++;
+	}
+	
+    useEffect(() => {
+    	window.addEventListener('wheel', function(event) {
+			if (scrolling) return;
+				if (event.deltaY < 0) scrollUp();
+				else if (event.deltaY > 0) scrollDown();
+        });
+
+		let touchstartY = 0
+		let touchendY = 0
+
+		document.addEventListener('touchstart', e => touchstartY = e.changedTouches[0].screenY)
+
+		document.addEventListener('touchend', e => {
+			touchendY = e.changedTouches[0].screenY
+		  	checkDirection()
+		})
+
+		function checkDirection() {
+			if (touchstartY - touchendY > 100 || touchstartY - touchendY < -100) {
+				console.log(touchstartY - touchendY);
+				if (scrolling) return;
+				if (touchendY < touchstartY) scrollDown();
+		  		if (touchendY > touchstartY) scrollUp();
+			}
+		}
+
+    });
+
+	return(
+		<div>
+			<main>	
+				<section className="hero anim -translate-y-full active" ref={ref}>
+					<div className="container">
+						<div className="main-text">
+							<h1>AHMAD YOVAN</h1>
+							<h1>PORTFOLIO</h1>
+						</div>
+						<nav>
+        		    <ul>
+        		        <li><a onClick={() => scrollTo(1)}>ABOUT ME</a></li>
+        		        <li><a onClick={() => scrollTo(2)}>MY PORTFOLIO</a></li>
+        		        <li><a onClick={() => scrollTo(3)}>CONTACT ME</a></li>
+        		    </ul>
+        		</nav>	
+					</div>
+				</section>
+				<section className="about anim" ref={ref} >
+        		    <div className="header">
+        		        <h1>ABOUT ME</h1>
+        		    </div>
+        		    <div className="content">
+        		        <p>Hello, I am Ahmad Yovan Ardiansyah, I am an informatics engineering student who is interested in programming, my goal is to become a developer</p>    
+        		    </div>
+        		</section>
+				<section className="portfolio anim" ref={ref}>
+        		    <div className="header">
+        		        <h1>PORTFOLIO</h1>
+        		    </div>
+        		    <div className="content">
+        		        <div className="outer">
+        		            <div className="inner">
+        		                <p>Game Development</p>
+        		            </div>
+        		        </div>
+        		        <div className="outer">
+        		            <div className="inner">
+        		                <p>Web Development</p>
+        		            </div>
+        		        </div>
+        		        <div className="outer">
+        		            <div className="inner">
+        		                <p>Mobile Development</p>
+        		            </div>
+        		        </div>
+        		    </div>
+        		</section>
+				<section className="contact anim" id="contact" ref={ref}>
+        		    <div className="header">
+        		        <h1>CONTACT ME</h1>
+        		    </div>
+        		    <div className="content">
+        		        <p>ahmadyovanardiansyah@gmail.com</p>
+        		    </div>
+        		</section>
+			</main>
+		</div>
+	)
 }
