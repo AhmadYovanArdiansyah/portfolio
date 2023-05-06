@@ -1,70 +1,87 @@
-import {  useEffect, useRef, useState} from "react";
+import HeroSection from "@/pages/HeroSection";
+import AboutSection from "@/pages/AboutSection";
+import PortfolioSection from "@/pages/PorfolioSection"
+import ContactSection from "@/pages/ContactSection"
+import { useEffect, useRef, useState} from "react";
+import Script from 'next/script';
 
-export default function Home() {
+const Home = () => {
 
 	var currentPage = 0;
 	var scrolling = false;
 
-	const sections = useRef<HTMLElement[]>([]) ;
-	sections.current = [] ;
+	const [state, setState] = useState(false);
+	const sections = useRef<HTMLElement[]>([]);
+	const prevState = useRef()
+	sections.current = [];
 
 	const ref = (e: HTMLElement) => {
+		if (e == null) return
 		sections.current.push(e);
+		console.log(sections.current);
 	}
 
 	const scrollTo = (n: number) => {
 		scrolling = true;
-		sections.current[currentPage]?.classList.remove('active');
-		sections.current[n]?.classList.add('active');
+		sections.current[currentPage].classList.remove('active');
+		sections.current[n].classList.add('active');
 		for (var i = 2; i < n + 1; i++) {
 			console.log(i);
-			if (n > 1) sections.current[i - 1]?.classList.remove('anim');
-			sections.current[i - 1]?.classList.add('hideup');
-			sections.current[i - 1]?.classList.remove('hidedown');
+			if (n > 1) sections.current[i - 1].classList.remove('duration-1000');
+			sections.current[i - 1].classList.add('-translate-y-full');
+			sections.current[i - 1].classList.remove('translate-y-full');
 		}
 		setTimeout(() => {
-			sections.current[n - 1]?.classList.add('anim');
-			sections.current[n - 2]?.classList.add('anim');
+			for (var i = 0; i < n; i++) {
+				sections.current[n - i].classList.add('duration-1000');
+			}
 			scrolling = false
 		}, 900);
 		currentPage = n;
 	}
 
 	const scroll = (e: string) => {
-		scrolling = true;
-		sections.current[currentPage]?.classList.remove('active');
-		if (e == 'up') {
-			sections.current[currentPage - 1]?.classList.add('active');
-			sections.current[currentPage]?.classList.add('hidedown');
-			sections.current[currentPage]?.classList.remove('hideup');	
-		} else if (e == 'down') {
-			sections.current[currentPage + 1]?.classList.add('active');
-			sections.current[currentPage]?.classList.add('hideup');
-			sections.current[currentPage]?.classList.remove('hidedown');
+		if (scrolling == false) {
+			scrolling = true;
+			sections.current[currentPage]?.classList.remove('active');
+			if (e == 'up') {
+				//setState(false)
+				console.log(currentPage);
+				sections.current[currentPage - 1]?.classList.add('active');
+				sections.current[currentPage]?.classList.add('translate-y-full');
+				sections.current[currentPage]?.classList.remove('-translate-y-full');	
+			} else if (e == 'down') {
+				//setState(true)
+				console.log(currentPage);
+				sections.current[currentPage + 1]?.classList.add('active');
+				sections.current[currentPage]?.classList.add('-translate-y-full');
+				sections.current[currentPage]?.classList.remove('translate-y-full');
+			}
+			setTimeout(() => scrolling = false, 900);
 		}
-		setTimeout(() => scrolling = false, 900);
 	}
+
 	const scrollUp = () => {
 		if (currentPage == 0) {
 			document.body.classList.remove('norefresh');
 			return;
 		}
 		document.body.classList.add('norefresh');
-		scroll('up');
+		scroll('up')
 		currentPage--;
 	}
 
 	const scrollDown = () => {
 		if (currentPage === (sections.current.length - 1)) return;
-		scroll('down');
+		scroll('down')
 		currentPage++;
 	}
-	
+
     useEffect(() => {
     	window.addEventListener('wheel', function(event) {
 			if (scrolling) return;
 				if (event.deltaY < 0) scrollUp();
-				else if (event.deltaY > 0) scrollDown();
+				if (event.deltaY > 0) scrollDown();
         });
 
 		let touchstartY = 0
@@ -85,66 +102,20 @@ export default function Home() {
 		  		if (touchendY > touchstartY) scrollUp();
 			}
 		}
-
+		
     });
 
 	return(
 		<div>
-			<main>	
-				<section className="hero anim -translate-y-full active" ref={ref}>
-					<div className="container">
-						<div className="main-text">
-							<h1>AHMAD YOVAN</h1>
-							<h1>PORTFOLIO</h1>
-						</div>
-						<nav>
-        		    <ul>
-        		        <li><a onClick={() => scrollTo(1)}>ABOUT ME</a></li>
-        		        <li><a onClick={() => scrollTo(2)}>MY PORTFOLIO</a></li>
-        		        <li><a onClick={() => scrollTo(3)}>CONTACT ME</a></li>
-        		    </ul>
-        		</nav>	
-					</div>
-				</section>
-				<section className="about anim" ref={ref} >
-        		    <div className="header">
-        		        <h1>ABOUT ME</h1>
-        		    </div>
-        		    <div className="content">
-        		        <p>Hello, I am Ahmad Yovan Ardiansyah, I am an informatics engineering student who is interested in programming, my goal is to become a developer</p>    
-        		    </div>
-        		</section>
-				<section className="portfolio anim" ref={ref}>
-        		    <div className="header">
-        		        <h1>PORTFOLIO</h1>
-        		    </div>
-        		    <div className="content">
-        		        <div className="outer">
-        		            <div className="inner">
-        		                <p>Game Development</p>
-        		            </div>
-        		        </div>
-        		        <div className="outer">
-        		            <div className="inner">
-        		                <p>Web Development</p>
-        		            </div>
-        		        </div>
-        		        <div className="outer">
-        		            <div className="inner">
-        		                <p>Mobile Development</p>
-        		            </div>
-        		        </div>
-        		    </div>
-        		</section>
-				<section className="contact anim" id="contact" ref={ref}>
-        		    <div className="header">
-        		        <h1>CONTACT ME</h1>
-        		    </div>
-        		    <div className="content">
-        		        <p>ahmadyovanardiansyah@gmail.com</p>
-        		    </div>
-        		</section>
+			<main className="relative h-screen w-screen overflow-hidden bg-[rgb(20,20,20)]">	
+				<HeroSection pageId={scrollTo} ref={ref} />
+				<AboutSection ref={ref} />
+				<PortfolioSection ref={ref} />
+				<ContactSection ref={ref} />
 			</main>
 		</div>
+	
 	)
 }
+
+export default Home

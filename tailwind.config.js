@@ -7,6 +7,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'noticia-text': ['"Noticia Text"', 'serif'],
+        'monda': ['Monda', 'sans-serif']// Ensure fonts with spaces have " " surrounding it.
+      },
+
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
