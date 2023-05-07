@@ -96,9 +96,9 @@ const Home = () => {
 			if (touchstartY - touchendY > 100 || touchstartY - touchendY < -100) {
 				if (scrolling) return;
 					if (touchendY < touchstartY) 
-						if (currentPage > 1) scroll('up')
-		  			if (touchendY > touchstartY) 
 						if (currentPage < (sections.current.length - 1)) scroll('down')
+		  			if (touchendY > touchstartY) 
+						if (currentPage > 1) scroll('up')
 			}
 		}
 		
