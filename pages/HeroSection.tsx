@@ -8,21 +8,21 @@ interface strucProps {
 const data = [
 	{
 		page: "ABOUT ME",
-		pageId: 1,
+		pageId: 2,
 	},
 	{
 		page: "MY WORK",
-		pageId: 2
+		pageId: 3
 	},
 	{
 		page: "CONTACT ME",
-		pageId: 3
+		pageId: 4
 	}
 ]
 
-const Hero = (props:strucProps, ref: React.LegacyRef<HTMLElement> | undefined) => {
+const Hero = (props:strucProps) => {
     return(
-        <section className="absolute h-screen w-screen -translate-y-full ease-in-out duration-1000 active" ref={ref}>
+        <>
 			<div className="w-full h-full text-white flex flex-col justify-center gap-40 items-center absolute z-50 pt-40">
 				<div className=" text-6xl font-noticia-text text-center">
 					<h1>AHMAD YOVAN</h1>
@@ -36,13 +36,12 @@ const Hero = (props:strucProps, ref: React.LegacyRef<HTMLElement> | undefined) =
         		    </ul>
         		</nav>	
 			</div>
-			{/* <HeroBackground /> */}
-		</section>
+			<HeroBackground />
+		</>
     )
 }
 
-const forwardRef = React.forwardRef(Hero)
-export default forwardRef;
+export default Hero;
 
 
         
