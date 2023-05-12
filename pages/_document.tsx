@@ -8,7 +8,7 @@ export default function Document() {
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Monda&family=Noticia+Text&display=swap" rel="stylesheet" />
       </Head>
-      <body>
+      <body className=' overflow-hidden relative bg-[rgb(20,20,20)]'>
         <Main />
         <NextScript />
       </body>

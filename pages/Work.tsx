@@ -1,4 +1,5 @@
-import React from "react";
+import { Variant, Variants, motion } from "framer-motion";
+import React, { useEffect } from "react";
 
 const data = [
     {
@@ -15,9 +16,23 @@ const data = [
     }
 ]
 
-const Work = () => {
+const Work = (props : { variants: Variants | undefined, direction: number }) => {
+
+    useEffect(() => {
+      
+        
+    })
+
     return(
-        <>
+        <motion.div
+        variants={props.variants} 
+        initial="enter"
+		animate="onview"
+		exit="exit"
+        transition={{
+            duration: 1
+        }}
+        className="h-screen w-screen bg-[rgb(20,20,20)] absolute">
             <div className="h-[20%] w-full flex justify-center items-end text-3xl font-light text-white">
                 <h1>MY WORK</h1>
             </div>
@@ -30,7 +45,7 @@ const Work = () => {
                     </div>
                 ))}
             </div>
-        </>
+        </motion.div>
     )
 }
 
